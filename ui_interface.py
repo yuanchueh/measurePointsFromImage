@@ -1,6 +1,10 @@
-from Tkinter import *
-from tkFileDialog import askopenfilename
-import Image, ImageTk
+from tkinter import *
+#from filedialog import askopenfilename
+#import tkinter.filedialog
+# or
+from tkinter.filedialog import askopenfilename
+
+from PIL import Image, ImageTk#import Image, ImageTk
 
 if __name__ == "__main__":
     root = Tk()
@@ -20,7 +24,7 @@ if __name__ == "__main__":
     frame.pack(fill=BOTH,expand=1)
 
     #adding the image
-    File = askopenfilename(parent=root, initialdir="C:/",title='Choose an image.')
+    File = askopenfilename(parent=root, initialdir="~\Documents\git\measureFromImage",title='Choose an image.')
     img = ImageTk.PhotoImage(Image.open(File))
     canvas.create_image(0,0,image=img,anchor="nw")
     canvas.config(scrollregion=canvas.bbox(ALL))
