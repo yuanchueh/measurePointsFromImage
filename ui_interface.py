@@ -1,10 +1,9 @@
 from tkinter import *
-#from filedialog import askopenfilename
-#import tkinter.filedialog
-# or
 from tkinter.filedialog import askopenfilename
-
 from PIL import Image, ImageTk#import Image, ImageTk
+
+def __init__(self,master):
+    master.minsize(width=1024, height=800)
 
 if __name__ == "__main__":
     root = Tk()
@@ -24,9 +23,24 @@ if __name__ == "__main__":
     frame.pack(fill=BOTH,expand=1)
 
     #adding the image
-    File = askopenfilename(parent=root, initialdir="~\Documents\git\measureFromImage",title='Choose an image.')
-    img = ImageTk.PhotoImage(Image.open(File))
-    canvas.create_image(0,0,image=img,anchor="nw")
+    # File = askopenfilename(parent=root, initialdir="~/Documents/git/measureFromImage/",title='Choose an image.')
+    file = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
+
+    # Load File into Pillow for Picture Dimension Sizes
+    img = Image.open(file)
+    img = img.convert('RGBA')
+    height = img.height
+    width = img.width
+    mode = img.mode
+    print (width, height, mode)
+    # img.show()
+
+    # Load Image into TKinter Interface
+    image = ImageTk.PhotoImage(Image.open(file))
+    ht = image.height()
+    wd = image.width()
+    print(ht, wd)
+    canvas.create_image(0,0,image=image,anchor="nw")
     canvas.config(scrollregion=canvas.bbox(ALL))
 
     #function to be called when mouse is clicked
@@ -36,4 +50,5 @@ if __name__ == "__main__":
     #mouseclick event
     canvas.bind("<Button 1>",printcoords)
 
+    root.minsize(width=1024,height=600);
     root.mainloop()
