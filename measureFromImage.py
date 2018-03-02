@@ -1,5 +1,5 @@
 from math import sqrt, pow
-
+from PIL import Image, ImageDraw, ImageFont
 # This function will be used to define the calibration value to convert between pixels and units.
 # Acceptable units are SI (um, mm, cm, m, km) and English (in, ft, mi)
 # Internally all units will be handled in mm and converted?
@@ -34,4 +34,4 @@ calibUnitValue = calibUnitChoices.get(calibUnit)
 p1 = [1,2]
 p2 = [2,5]
 dist = calculateDistance(p1, p2, calibUnitValue)
-print('calulate distance', dist, 'and the calibration unit is ', calibUnit, '. The conversion value is', calibUnitValue)
+print('calulate distance' , dist, 'and the calibration unit is ', calibUnit, '. The conversion value is', calibUnitValue)
