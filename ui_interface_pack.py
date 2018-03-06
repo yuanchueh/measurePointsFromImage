@@ -24,6 +24,7 @@ if __name__ == "__main__":
     # Create interface items
     calibVariable = StringVar(gui)
     calibVariable.set(calibUnitChoices['m'])
+
     # Pack Style Interface
     calibMenu = OptionMenu(gui, calibVariable, *calibUnitChoices.keys()).pack(side='top', fill='y')
     calibLbl = Label(gui, text='TEST').pack(side='top', fill='x')
