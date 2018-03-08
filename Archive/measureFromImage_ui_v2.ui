@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface>
+  <object class="tk.Toplevel" id="root">
+    <property name="background">#d9d934</property>
+    <property name="height">500</property>
+    <property name="resizable">both</property>
+    <property name="title" translatable="yes">Test</property>
+    <property name="width">500</property>
+    <child>
+      <object class="ttk.Frame" id="Frame_8">
+        <property name="borderwidth">5</property>
+        <property name="height">500</property>
+        <property name="padding">5</property>
+        <property name="width">100</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <property name="sticky">w</property>
+        </layout>
+        <child>
+          <object class="ttk.Button" id="Button_10">
+            <property name="text" translatable="yes">Button_10</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="Button_11">
+            <property name="text" translatable="yes">Button_11</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="Button_12">
+            <property name="text" translatable="yes">Button_12</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="Button_13">
+            <property name="text" translatable="yes">Button_13</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">3</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="Frame_9">
+        <property name="borderwidth">5</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+        <child>
+          <object class="tk.Canvas" id="Canvas_7">
+            <property name="background">#38d9d9</property>
+            <property name="selectborderwidth">0</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="Frame_11">
+        <property name="height">15</property>
+        <property name="width">500</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="columnspan">2</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+          <property name="sticky">s</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>

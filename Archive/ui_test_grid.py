@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from PIL import Image, ImageTk#import Image, ImageTk
+from PIL import Image, ImageTk #import Image, ImageTk
 
 root = Tk()
 
@@ -8,9 +8,9 @@ content = ttk.Frame(root, padding=(3,3,12,12))
 imageFrame = ttk.Frame(content, borderwidth=5, relief="sunken", width=200, height=100)
 imagePILPath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
 imagePIL = Image.open(imagePILPath)
-image = ImageTK.PhotoImage(imagePIL)
+image = ImageTk.PhotoImage(imagePIL)
 
-# canvas = Canvas(imageFrame, height=200, width=200)
+canvas = Canvas(imageFrame, height=200, width=200)
 # basewidth = 150
 # wpercent = (basewidth / float(image.size[0]))
 # hsize = int((float(image.size[1]) * float(wpercent)))
@@ -23,8 +23,8 @@ image = ImageTK.PhotoImage(imagePIL)
 # imagePIL = ImageTk.PhotoImage(Image.open(file))
 
 
-# canvas.create_image(0,0,image=image,anchor="nw")
-# canvas.config(scrollregion=canvas.bbox(ALL))
+canvas.create_image(0,0,image=image,anchor="nw")
+canvas.config(scrollregion=canvas.bbox(ALL))
 
 
 namelbl = ttk.Label(content, text="Name")
