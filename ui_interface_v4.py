@@ -22,6 +22,12 @@ def calibrateBtn():
     print('Button Pressed')
     calibBtn(root, text='Calibrate', state=DISABLED)
 
+def loadImage():
+    filePath = askopenfilename(parent=root, initialdir='~/Documents/git/measureFromImage/',title='Choose an image.')
+    canvas.create_image(0,0,image=image,anchor="nw")
+    canvas.config(scrollregion=canvas.bbox(ALL))
+
+
 if __name__ == '__main__':
     root = Tk()
     root.title('Measure Distance from Image - by Anatomy3D')
@@ -50,7 +56,7 @@ if __name__ == '__main__':
     btnWidth = 8
     strFilePath = Entry(frmTools, background='pink', width=btnWidth*2)
     btnFilePath = Button(frmTools, background='yellow', text='Select File', width=btnWidth)
-    btnLoadImage = Button(frmTools, background='yellow', text='Load Image', width=btnWidth)
+    btnLoadImage = Button(frmTools, background='yellow', text='Load Image', width=btnWidth, command=loadImage)
     btnUndo = Button(frmTools, background='yellow', text='Undo', width=btnWidth)
     btnRedo = Button(frmTools, background='yellow', text='Redo', width=btnWidth)
     btnCalibrate = Button(frmTools, text='Calibrate', width=btnWidth)
@@ -115,14 +121,14 @@ if __name__ == '__main__':
 
     # Adding the image to the Canvas
     # filePath = askopenfilename(parent=root, initialdir='~/Documents/git/measureFromImage/',title='Choose an image.')
-    filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
+    # filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
 
     # Load Image into TKinter Interface
-    image = ImageTk.PhotoImage(Image.open(filePath))
-    height = image.height()
-    width = image.width()
-    canvas.create_image(0,0,image=image,anchor="nw")
-    canvas.config(scrollregion=canvas.bbox(ALL))
+    # image = ImageTk.PhotoImage(Image.open(filePath))
+    # height = image.height()
+    # width = image.width()
+    # canvas.create_image(0,0,image=image,anchor="nw")
+    # canvas.config(scrollregion=canvas.bbox(ALL))
 
     # Loop GUI
     root.minsize(width=600,height=400);
