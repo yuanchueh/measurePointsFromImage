@@ -10,13 +10,13 @@ if __name__ == "__main__":
     root.title('Model Definition')
     #root.geometry('{}x{}'.format(460, 350))
 
-    imgDisplay = Frame(root,bg='green')
+    frmDisplay = Frame(root,bg='green')
     left = Frame(root, bg='blue', width=75)
 
     left.pack(side='left', fill='y', expand=False)
-    imgDisplay.pack(side='right', fill='both', expand=True)
+    frmDisplay.pack(side='right', fill='both', expand=True)
 
-    imgCanvas = Canvas(imgDisplay)
+    imgCanvas = Canvas(frmDisplay)
     button = Button(left, text="Calibrate")
 
     file = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
