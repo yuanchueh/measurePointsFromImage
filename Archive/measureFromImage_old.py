@@ -4,17 +4,17 @@ from os import sys
 #from __future__ import print_function
 
 # get an image
-base = Image.open("car.png").convert('RGBA')
-base# = Image.open('Pillow/Tests/images/lena.png').convert('RGBA')
+im = Image.open("car.png").convert('RGBA')
+# base# = Image.open('Pillow/Tests/images/lena.png').convert('RGBA')
 print(im.format, im.size, im.mode)
 
 #draw = ImageDraw.Draw(im)
 #draw.line((0, 0) + im.size, fill=128)
-#draw.line((0, im.size[1], im.size[0], 0), fill=128)
+# draw.line((0, im.size[1], im.size[0], 0), fill=128)
 #del draw
 
 #Draw lines
-line = ImageDraw.Draw.line(10,10,75,75)
+# line = ImageDraw.Draw.line(10,10,75,75)
 
 
 # make a blank image for the text, initialized to transparent text color

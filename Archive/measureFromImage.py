@@ -36,7 +36,6 @@ p1 = [1,2]
 p2 = [2,5]
 dist = calculateDistance(p1, p2, calibUnitValue)
 print('calulate distance' , dist, 'and the calibration unit is ', calibUnit, '. The conversion value is', calibUnitValue)
-=======
 from os import sys
 #from imutils import perspective
 #from __future__ import print_function
@@ -75,4 +74,3 @@ out.show()
 
 # write to stdout
 #im.save(sys.stdout, "PNG")
->>>>>>> Stashed changes

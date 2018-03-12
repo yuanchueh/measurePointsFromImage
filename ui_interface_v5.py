@@ -7,7 +7,10 @@ from time import sleep
 # Additional Resources
 #   https://stackoverflow.com/questions/5501192/how-to-display-picture-and-get-mouse-click-coordinate-on-it
 #   https://stackoverflow.com/questions/8590234/capturing-x-y-coordinates-with-python-pil
-# v4 - working interface, but functions dont really work. 
+# v4 - working interface, but functions dont really work.
+# v5 - adding full functionality. Reset works. Must run calibration first before capturing points. Capture button set as toggle and only works when calibration has been completed. Calibration equations are not implemented.
+
+#After this is complete, work on converting to classes.
 
 calibUnitChoices = {
     'um': 1e6,
@@ -22,9 +25,11 @@ calibUnitChoices = {
 
 def calibrate():
     #lblStatus.selection_clear()
+    global statusCalibrated, statusCollectPoints
     lblStatus.configure(text='Button Pressed - Select 2 calibration points on the image of a known distance.')
-    calibrateComplete=False
-    btnCalibrate.configure(state=DISABLED)
+    statusCalibrated = False
+    statusCollectPoints = False
+    btnCalibrate.configure(state = DISABLED)
 
     #   canvas.create_line(0,100,200,0,fill='black', dash=(4,4))
 
@@ -38,12 +43,12 @@ def calculatePixelDistance(startPoint, endPoint):
 
 def getCoordinates(event):
     #outputting x and y coords to console
-    global clickCounter, xPrev, yPrev, calibrateComplete
+    global clickCounter, xPrev, yPrev, calibrateComplete, statusCalibrated, statusCollectPoints
     clickCounter += 1
     # lblStatus.configure(text='Coordinates [x,y]: [{},{}], and you have clicked {} times'.format(event.x,event.y, clickCounter))
-    if calibrateComplete == False:
+    if statusCalibrated == False and statusCollectPoints == False: #Perform Calibration
         lblStatus.configure(text='In calibration.')
-        sleep(2)
+        # sleep(2)
         if clickCounter%2 == 1:#First Click
             xPrev = event.x
             yPrev = event.y
@@ -57,7 +62,9 @@ def getCoordinates(event):
             calibrateComplete = True
             lblStatus.configure(text='Calibration Complete.')
             lstCollected.insert(0,'Calibration Done {}'.format(calibrationMultiplier))
-    else: #The calibration is complete so now we can collect points.
+            statusCalibrated = True
+            btnCapture.configure(state=ACTIVE)
+    elif statusCalibrated == True and statusCollectPoints == True: #The calibration is complete so now we can collect points.
         if clickCounter%2 == 1:#First Click
             xPrev = event.x
             yPrev = event.y
@@ -75,11 +82,25 @@ def getCoordinates(event):
             canvas.create_text(xPrev-15,yPrev, text=outputString)
             lstCollected.insert(0,outputString)
             # Need to update history list from here.
+    else:
+        clickCounter = 0
+        lblStatus.configure(text='No Action!!! --> Click Count={}'.format(clickCounter))
+        return
     radius = 2.5
     color='green'
     lblStatus.configure(text='Coordinates [x,y]: [{},{}], and you have clicked {} times'.format(event.x,event.y, clickCounter))
     canvas.create_oval(event.x-radius,event.y-radius,event.x+radius, event.y+radius, fill=color)
     # return
+
+def captureState():
+    global statusCollectPoints
+    if btnCapture.config('relief')[-1] == 'sunken':
+        btnCapture.config(relief="raised")
+        statusCollectPoints = False
+    else:
+        btnCapture.config(relief="sunken")
+        statusCollectPoints = True
+
 
 def loadImage():
     filePath = askopenfilename(parent=root, initialdir='~/Documents/git/measureFromImage/',title='Choose an image.')
@@ -111,11 +132,14 @@ def setScale():
     lblStatus.configure(text='Scale Factor: {}'.format(scaleFactor))
 
 def resetInterface():
+    global statusCalibrated, statusCollectPoints
+    statusCalibrated = False
+    statusCollectPoints = True
     btnLoadImage.configure(state=ACTIVE)
     btnUndo.configure(state=DISABLED)
     btnRedo.configure(state=DISABLED)
     btnCalibrate.configure(state=ACTIVE)
-    btnCapture.configure(state=DISABLED)
+    btnCapture.configure(state=DISABLED, relief='raised')
     btnSetScale.configure(state=DISABLED)
     btnExport.configure(state=DISABLED)
     btnReset.configure(state=ACTIVE)
@@ -174,7 +198,7 @@ if __name__ == '__main__':
     # calibUnitVar.set = 'Choose an Option'
     drpUnitSelect = OptionMenu(frmTools, calibUnitVar, *calibUnitChoices.keys())
 
-    btnCapture = Button(frmTools, text='Capture', width=btnWidth, state=DISABLED)
+    btnCapture = Button(frmTools, text='Capture', width=btnWidth, state=DISABLED, relief='raised', command=captureState)
     strSetScale = Entry(frmTools, width=btnWidth)
     lblSetScale = Label(frmTools, text='Set Image Scale Factor (%)')
     btnSetScale = Button(frmTools, text='Apply', width=btnWidth, command=setScale)
@@ -237,6 +261,9 @@ if __name__ == '__main__':
     # Initialize Variables
     calibrateComplete = False
     captureActive = False
+    statusCalibrated=False
+    statusCollectPoints = True # This is set to true so that there is a logical incongruency between
+    # the logic loop to ensure the calibrate button has been run before points can be collected.
 
     # Loop GUI
     root.minsize(width=600,height=400);
