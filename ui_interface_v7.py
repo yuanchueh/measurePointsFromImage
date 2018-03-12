@@ -10,6 +10,19 @@ from time import sleep
 # v4 - working interface, but functions dont really work.
 # v5 - adding full functionality. Reset works. Must run calibration first before capturing points. Capture button set as toggle and only works when calibration has been completed. Calibration equations are not implemented.
 # v6 - converted status variables to a single status dictionary. Combined functions further. Moved variables into Reset function
+# v7 - Need to add zoom factor.
+
+#To Do: Get calculated numbers to be correct.
+
+calibUnitChoices = {
+    'um': 1e6,
+    'mm': 1e3,
+    'cm': 1e2,
+    'm':  1,
+    'km': 1e-3,
+    'in': 39.3701,
+    'ft': 3.28084,
+    'mi': 0.000621371}
 
 def resetInterface():
     global status
@@ -19,23 +32,12 @@ def resetInterface():
         'CollectPoints': True,
         'ImageLoaded':False,
         'clickCounter':0}
-
-    calibUnitChoices = {
-        'um': 1e6,
-        'mm': 1e3,
-        'cm': 1e2,
-        'm':  1,
-        'km': 1e-3,
-        'in': 39.3701,
-        'ft': 3.28084,
-        'mi': 0.000621371}
-
     btnLoadImage.configure(state=ACTIVE)
     btnUndo.configure(state=DISABLED)
     btnRedo.configure(state=DISABLED)
     btnCalibrate.configure(state=ACTIVE)
     btnCapture.configure(state=DISABLED, relief='raised')
-    btnSetScale.configure(state=DISABLED)
+    btnSetScale.configure(state=ACTIVE)
     btnExport.configure(state=DISABLED)
     btnReset.configure(state=ACTIVE)
     #strSetScale.configure(state=DISABLED)
@@ -131,10 +133,6 @@ def captureState():
 
 def loadImage():
     filePath = askopenfilename(parent=root, initialdir='~/Documents/git/measureFromImage/',title='Choose an image.')
-    # canvas.create_image(0,0,image=image,anchor="nw")
-    # canvas.config(scrollregion=canvas.bbox(ALL))
-    # Adding the image to the Canvas
-    # filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
 
     # Load Image into TKinter Interface
     image = ImageTk.PhotoImage(Image.open(filePath))
@@ -145,6 +143,19 @@ def loadImage():
     canvas.config(scrollregion=canvas.bbox(ALL))
     btnLoadImage.configure(state=DISABLED)
 
+def setScale():
+    # global filePath
+    filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
+    imageScaled = Image.open(filePath)
+    imageScaled = imageScaled.resize((250,250))
+    canvas.image=imageScaled
+    # image = ImageTk.PhotoImage(image=imageScaled)
+    canvas.create_image(0,0,image=canvas.image,anchor="nw")
+    # scaleFactor = strSetScale.get()
+    lblStatus.configure(text='Scale Factor: {}'.format(scaleFactor))
+    # image =
+    # canvas.scale()
+
 def calculateDistance(startPoint, endPoint, calibValue):
     #indices
     x = 0
@@ -153,12 +164,6 @@ def calculateDistance(startPoint, endPoint, calibValue):
     distanceInPixels = sqrt( pow(endPoint[x] - startPoint[x],2) + pow(endPoint[y] - startPoint[y],2) )
     distanceReal = distanceInPixels * calibValue
     return distanceReal;
-
-def setScale():
-    scaleFactor = strSetScale.get()
-    lblStatus.configure(text='Scale Factor: {}'.format(scaleFactor))
-
-
 
 if __name__ == '__main__':
     root = Tk()
@@ -259,11 +264,6 @@ if __name__ == '__main__':
     canvas.bind("<Button 1>",getCoordinates)
     xPrev = 0
     yPrev = 0
-
-    # Initialize Variables
-    # status = {'Calibrated': False, 'CollectPoints': True, 'ImageLoaded':False}
-    #This is set to true so that there is a logical incongruency between
-    # the logic loop to ensure the calibrate button has been run before points can be collected.
 
     # Loop GUI
     root.minsize(width=600,height=400);
