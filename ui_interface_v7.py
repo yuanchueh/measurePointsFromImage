@@ -145,7 +145,7 @@ def setScale():
     filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
     scaleFactor = float(strSetScale.get())
     imageScaled = Image.open(filePath)
-    imageScaled = imageScaled.resize((250,250))
+    imageScaled = imageScaled.resize((35,250))
     canvas.image = ImageTk.PhotoImage(imageScaled)
     # image = ImageTk.PhotoImage(image=imageScaled)
     canvas.create_image(0, 0, image=canvas.image, anchor="nw")
@@ -153,6 +153,30 @@ def setScale():
     lblStatus.configure(text='Scale Factor: {}'.format(scaleFactor))
     # image =
     # canvas.scale()
+
+# def setScale():
+#     # global filePath
+#     filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
+#     scaleFactor = float(strSetScale.get())
+#     image = Image.open(filePath)
+#     imagePhoto = ImageTk.PhotoImage(image)
+#     imageHeight = imagePhoto.height()
+#     imageWidth = imagePhoto.width()
+#
+#     scaleHeight = int(imageHeight * scaleFactor)
+#     scaleWidth = int(imageWidth * scaleFactor)
+#     imageScaled= imagePhoto.resize
+#     imageScaled = imageScaled.resize(scaleHeight,scaleWidth)
+#     canvas.image = ImageTk.PhotoImage(imageScaled)
+#     # image = ImageTk.PhotoImage(image=imageScaled)
+#     canvas.create_image(0, 0, image=canvas.image, anchor="nw")
+#     # scaleFactor = strSetScale.get()
+#     lblStatus.configure(text='Scale Factor: {}'.format(scaleFactor))
+#     # image =
+#     # canvas.scale()
+
+
+
 
 if __name__ == '__main__':
     root = Tk()

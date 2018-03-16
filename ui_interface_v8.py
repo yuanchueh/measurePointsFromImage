@@ -13,8 +13,6 @@ from tk_tools import SmartOptionMenu
 # v6 - converted status variables to a single status dictionary. Combined functions further. Moved variables into Reset function
 # v7 - Need to add zoom factor.
 
-#To Do: Get calculated numbers to be correct.
-
 #The calibration unit selector was originally meant to serve as a conversion factor, but the program has been simplified to only use this as a notation of what the unit currently is. The conversion factor is not currently used.
 calibUnitChoices = {
     'um': 1e6,
@@ -64,7 +62,7 @@ def calibrate():
     btnCalibrate.configure(state = DISABLED)
     #   canvas.create_line(0,100,200,0,fill='black', dash=(4,4))
 
-def calculateDistance(startPoint, endPoint, calibValue):
+def calculateDistance(startPoint, endPoint, *calibValue):
     # handles.unitConverter = C/Cp; %Use in the form Cp/C = Yp/Y where:
     # Cp is pixel length C
     # Yp is pixel length Y
@@ -79,31 +77,39 @@ def calculateDistance(startPoint, endPoint, calibValue):
     y = 1
     #calculate distance
     distanceInPixels = sqrt( pow(endPoint[x] - startPoint[x],2) + pow(endPoint[y] - startPoint[y],2) )
-    distanceReal = distanceInPixels * calibValue
-    return distanceReal;
+    if calibValue: #If the calibration value is sent then convert to known length. Otherwise just send the pixel distance as measured
+        distance = distanceInPixels * calibValue[0]
+    else:
+        distance = distanceInPixels
+    return distance
 
 def getCoordinates(event):
     #outputting x and y coords to console
-    global xPrev, yPrev, status, C, Cp#, calibUnitVar, calibUnitChoices
+    global xPrev, yPrev, status, calibratedLengthKnown, calibratedLengthPixels
     status['clickCounter'] += 1
     if status['Calibrated'] == False and status['CollectPoints'] == False: #Perform Calibration
+        color='red'
         lblStatus.configure(text='In calibration.')
         if status['clickCounter']%2 == 1:#First Click
             xPrev = event.x
             yPrev = event.y
         else:#Second calibration click. Calculate the distance and value.
-            calibratedLengthPixels = Cp = calculatePixelDistance([xPrev, yPrev], [event.x, event.y])
-            calibratedLengthKnown = C = float(strUnitLength.get())
+            canvas.create_line(xPrev,yPrev, event.x, event.y)
+            calibratedLengthPixels = calculateDistance([xPrev, yPrev], [event.x, event.y])
+            calibratedLengthKnown = float(strUnitLength.get())
+            outputString = 'Calibration - {0:.3f}'.format(calibratedLengthKnown)
+            canvas.create_text(xPrev-15,yPrev, text=outputString, fill='red', justify = RIGHT)
             lblStatus.configure(text='Calibration Complete.')
             status['Calibrated'] = True
             btnCapture.configure(state=ACTIVE)
     elif status['Calibrated'] == True and status['CollectPoints'] == True: #The calibration is complete so now we can collect points.
+        color='green'
         if status['clickCounter']%2 == 1:#First Click
             xPrev = event.x
             yPrev = event.y
         else:#Second Click
             canvas.create_line(xPrev,yPrev, event.x, event.y)
-            distance = calculateDistance([xPrev, yPrev], [event.x, event.y], C/Cp)
+            distance = calculateDistance([xPrev, yPrev], [event.x, event.y], calibratedLengthKnown/calibratedLengthPixels)
             iterater = status['clickCounter']/2
             outputString = '#{0:.0f} - {1:.3f}'.format(iterater, distance)
             canvas.create_text(xPrev-15,yPrev, text=outputString)
@@ -113,7 +119,6 @@ def getCoordinates(event):
         lblStatus.configure(text='No Action!!! --> Click Count={}'.format(status['clickCounter']))
         return
     radius = 2.5
-    color='green'
     lblStatus.configure(text='Coordinates [x,y]: [{},{}], and you have clicked {} times'.format(event.x,event.y, status['clickCounter']))
     canvas.create_oval(event.x-radius,event.y-radius,event.x+radius, event.y+radius, fill=color)
 
@@ -143,16 +148,46 @@ def loadImage():
 def setScale():
     # global filePath
     filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
-    scaleFactor = float(strSetScale.get())
-    imageScaled = Image.open(filePath)
-    imageScaled = imageScaled.resize((250,250))
+    scaleFactor = int(strSetScale.get())
+    imageOriginal = Image.open(filePath)
+    imageOriginalPhoto = ImageTk.PhotoImage(imageOriginal)
+    origH = imageOriginalPhoto.height()
+    origW = imageOriginalPhoto.width()
+    scaleHeight = int(origH * scaleFactor / 100)
+    scaleWidth = int(origW * scaleFactor / 100)
+    imageScaled = imageOriginal.resize((scaleWidth, scaleHeight))
     canvas.image = ImageTk.PhotoImage(imageScaled)
     # image = ImageTk.PhotoImage(image=imageScaled)
     canvas.create_image(0, 0, image=canvas.image, anchor="nw")
     # scaleFactor = strSetScale.get()
-    lblStatus.configure(text='Scale Factor: {}'.format(scaleFactor))
+    lblStatus.configure(text='Scale Factor: {}, (H, W): ({}, {})'.format(scaleFactor, origH, origW))
+
     # image =
     # canvas.scale()
+
+# def setScale():
+#     # global filePath
+#     filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
+#     scaleFactor = float(strSetScale.get())
+#     image = Image.open(filePath)
+#     imagePhoto = ImageTk.PhotoImage(image)
+#     imageHeight = imagePhoto.height()
+#     imageWidth = imagePhoto.width()
+#
+#     scaleHeight = int(imageHeight * scaleFactor)
+#     scaleWidth = int(imageWidth * scaleFactor)
+#     imageScaled= imagePhoto.resize
+#     imageScaled = imageScaled.resize(scaleHeight,scaleWidth)
+#     canvas.image = ImageTk.PhotoImage(imageScaled)
+#     # image = ImageTk.PhotoImage(image=imageScaled)
+#     canvas.create_image(0, 0, image=canvas.image, anchor="nw")
+#     # scaleFactor = strSetScale.get()
+#     lblStatus.configure(text='Scale Factor: {}'.format(scaleFactor))
+#     # image =
+#     # canvas.scale()
+
+
+
 
 if __name__ == '__main__':
     root = Tk()
