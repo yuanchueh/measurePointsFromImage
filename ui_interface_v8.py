@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from math import sqrt, pow
-from PIL import Image, ImageDraw, ImageFont, ImageTk
+from PIL import Image, ImageDraw, ImageFont, ImageGrab, ImageTk, PngImagePlugin
 from time import sleep
 from tk_tools import SmartOptionMenu
 # The basic interface is laid out. Not functionality yet.
@@ -60,6 +60,7 @@ def calibrate():
     status['Calibrated'] = False
     status['CollectPoints'] = False
     btnCalibrate.configure(state = DISABLED)
+    btnExport.configure(state=ACTIVE)
     #   canvas.create_line(0,100,200,0,fill='black', dash=(4,4))
 
 def calculateDistance(startPoint, endPoint, *calibValue):
@@ -165,29 +166,21 @@ def setScale():
     # image =
     # canvas.scale()
 
-# def setScale():
-#     # global filePath
-#     filePath = '/home/yuanchueh/Documents/git/measureFromImage/car.png'
-#     scaleFactor = float(strSetScale.get())
-#     image = Image.open(filePath)
-#     imagePhoto = ImageTk.PhotoImage(image)
-#     imageHeight = imagePhoto.height()
-#     imageWidth = imagePhoto.width()
-#
-#     scaleHeight = int(imageHeight * scaleFactor)
-#     scaleWidth = int(imageWidth * scaleFactor)
-#     imageScaled= imagePhoto.resize
-#     imageScaled = imageScaled.resize(scaleHeight,scaleWidth)
-#     canvas.image = ImageTk.PhotoImage(imageScaled)
-#     # image = ImageTk.PhotoImage(image=imageScaled)
-#     canvas.create_image(0, 0, image=canvas.image, anchor="nw")
-#     # scaleFactor = strSetScale.get()
-#     lblStatus.configure(text='Scale Factor: {}'.format(scaleFactor))
-#     # image =
-#     # canvas.scale()
+def exportImage():
+    # global canvas
+    # PIL image can be saved as .png .jpg .gif or .bmp file (among others)
+    filename = '~/Documents/git/measureFromImage/output_image.png'
+    # frmCanvas.save(filename)
+    # def save_image(self):
+    x=winfo_rootx()+canvas.winfo_x()
+    y=winfo_rooty()+canvas.winfo_y()
+    x1=x+canvas.winfo_width()
+    y1=y+canvas.winfo_height()
 
-
-
+    # filename = filedialog.asksaveasfilename(initialdir = "C:/Users/desktop.ini",
+                                              # title = "Select file",
+                                              # filetypes = (("PNG files","*.png"),("All files","*.*")))
+    ImageGrab.grab().crop((x,y,x1,y1)).save(filename, format="PNG")
 
 if __name__ == '__main__':
     root = Tk()
@@ -228,7 +221,7 @@ if __name__ == '__main__':
     strSetScale = Entry(frmTools, width=btnWidth)
     lblSetScale = Label(frmTools, text='Set Image Scale Factor (%)')
     btnSetScale = Button(frmTools, text='Apply', width=btnWidth, command=setScale)
-    btnExport = Button(frmTools, text='Export Image', width=btnWidth)
+    btnExport = Button(frmTools, text='Export Image', width=btnWidth, command=exportImage)
     btnReset = Button(frmTools, text='Reset', width=btnWidth, command=resetInterface)
     lstCollected = Listbox(frmTools, width=btnWidth*2, height=50)
 
